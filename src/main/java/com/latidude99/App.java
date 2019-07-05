@@ -14,8 +14,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"));
+        scene = new Scene(loadFXML("main"));
         stage.setScene(scene);
+        stage.setTitle("Folder Backup Util v1.0");
         stage.show();
     }
 

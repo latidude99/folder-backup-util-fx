@@ -1,5 +1,7 @@
 package com.latidude99;
 
+import javafx.concurrent.Task;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,32 +14,44 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class FolderZipUtil {
+public class ZipTask extends Task <Void>{
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH.mm");
     LocalDateTime localDateTime;
-
     private List <String> fileList;
-//    private static String OUTPUT_ZIP_FILE = "Backup.zip";
-//    private String SOURCE_FOLDER = "E:\\___PROJECTS\\FolderBackupTool";
+    private List<String> excluded;
+    private String archiveNameDefined;
+    public String archiveNameGenerated;
+    public String logNameGenerated;
+    String sourceFolder;
 
-    public FolderZipUtil() {
-        fileList = new ArrayList <String>();
+    public ZipTask() throws IOException {
+        fileList = new ArrayList <>();
+        ConfigReadUtil.readConfig();
+        excluded = ConfigReadUtil.excluded;
+        archiveNameDefined = ConfigReadUtil.name;
     }
 
-    public static void main(String[] args) {
-        System.out.println(Info.info);
-        FolderZipUtil folderZipUtil = new FolderZipUtil();
-        String backupFile = folderZipUtil.getBackupPathAndName(args);
-        String sourceFolder = folderZipUtil.getSourceFolder();
 
-        folderZipUtil.generateFileList(args, sourceFolder, new File(sourceFolder));
-        folderZipUtil.zipIt(sourceFolder, backupFile);
-        System.out.println(Info.info);
+    @Override
+    protected Void call() throws Exception {
+        archiveNameGenerated = getBackupPathAndName(archiveNameDefined);
+        logNameGenerated = archiveNameGenerated.substring(0, archiveNameGenerated.length() -3) +
+                "log";
+        ConfigReadUtil.logConfig(logNameGenerated, archiveNameGenerated);
+
+        sourceFolder = getSourceFolder();
+
+        generateFileList(excluded, sourceFolder, new File(sourceFolder));
+        zipIt(sourceFolder, archiveNameGenerated);
+
+        return null;
     }
-
 
 
     public void zipIt(String sourceFolder, String zipFile) {
+        long numberOfFiles = fileList.size();
+        long archived = 0;
+
         byte[] buffer = new byte[1024];
         String source = new File(sourceFolder).getName();
         FileOutputStream fos = null;
@@ -46,11 +60,14 @@ public class FolderZipUtil {
             fos = new FileOutputStream(zipFile);
             zos = new ZipOutputStream(fos);
 
-            System.out.println("Output to Zip : " + zipFile);
             FileInputStream in = null;
 
             for (String file: this.fileList) {
-                System.out.println("File Added : " + file);
+                if(this.isCancelled()){
+                    this.updateMessage("Operation has been canceled.");
+                    return;
+                }
+                Logger.log(logNameGenerated, "\r\nadding file : " + file);
                 ZipEntry zipEntry = new ZipEntry(source + File.separator + file);
                 zos.putNextEntry(zipEntry);
                 try {
@@ -62,10 +79,15 @@ public class FolderZipUtil {
                 } finally {
                     in.close();
                 }
+            archived += 1;
+            this.updateProgress(archived, numberOfFiles);
+            this.updateMessage("added: " + file);
+            Logger.log(logNameGenerated, " ....OK");
             }
 
             zos.closeEntry();
-            System.out.println("Folder successfully compressed");
+            Logger.log(logNameGenerated, "\r\n\r\n" +
+                    "Folder  " + sourceFolder + "  has been successfully compressed\r\n");
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -78,13 +100,14 @@ public class FolderZipUtil {
         }
     }
 
-    public void generateFileList(String[] args, String sourceFolder, File node) {
-        List<String> argsList = argsToList(args);
+    public void generateFileList(List<String> excluded, String sourceFolder, File node) {
+//      List<String> argsList = argsToList(args);
         int count= 0;
-        // add file only
+
+        // adds file only
         if (node.isFile()) {
             count = 0;
-            for (String name : argsList) {
+            for (String name : excluded) {
                 if (node.getName().equals(name))
                     count++;
             }
@@ -92,17 +115,16 @@ public class FolderZipUtil {
                 fileList.add(generateZipEntry(sourceFolder, node.toString()));
         }
 
-
         if (node.isDirectory()) {
             count = 0;
-            for (String name : argsList) {
+            for (String name : excluded) {
                 if (node.getName().equals(name))
                     count++;
             }
             if(count == 0){
                 String[] subNode = node.list();
                 for (String filename: subNode) {
-                    generateFileList(args, sourceFolder, new File(node, filename));
+                    generateFileList(excluded, sourceFolder, new File(node, filename));
                 }
             }
         }
@@ -112,15 +134,15 @@ public class FolderZipUtil {
         return file.substring(sourceFolder.length() + 1, file.length());
     }
 
-    private List<String> argsToList(String[] args){
-        List<String> argsList;
-        if(args.length >0)
-            argsList = Arrays.asList(args);
-        else
-            argsList = new ArrayList<>();
-
-        return argsList;
-    }
+//    private List<String> argsToList(String[] args){
+//        List<String> argsList;
+//        if(args.length >0)
+//            argsList = Arrays.asList(args);
+//        else
+//            argsList = new ArrayList<>();
+//
+//        return argsList;
+//    }
 
     public String getSourceFolder(){
         File tmpFile = new File("tmp2.txt");
@@ -130,7 +152,7 @@ public class FolderZipUtil {
         return sourceFolder;
     }
 
-    public String getBackupPathAndName(String[] args){
+    public String getBackupPathAndName(String customName){
         String pathAndName;
         File tmpFile = new File("tmp1.txt");
         String path = tmpFile.getAbsolutePath();
@@ -138,34 +160,36 @@ public class FolderZipUtil {
         String folder = path.substring(path.lastIndexOf("\\"));
         localDateTime = LocalDateTime.now();
         String time = localDateTime.format(formatter);
-        System.out.println("Date & Time: " + time);
-        pathAndName = path +
+        if(customName != null && !customName.equals("")){
+            pathAndName = path + File.separator + customName;
+        }else{
+            pathAndName = path +
                     File.separator +
                     folder +
                     "_backup_" +
                     time +
                     ".zip";
-
+        }
         tmpFile.delete();
         return pathAndName;
     }
 
 
 
-
-    public boolean moveBackupFile(String backupFileName, File file){
-        File backupFile = new File(backupFileName);
-
-        if(backupFile.renameTo
-                (new File("E:\\___BACKUP\\backup.zip"))) {
-            file.delete();
-            System.out.println("File moved successfully");
-            return true;
-        } else {
-            System.out.println("Failed to move the file");
-            return false;
-        }
-    }
+//
+//    public boolean moveBackupFile(String backupFileName, File file){
+//        File backupFile = new File(backupFileName);
+//
+//        if(backupFile.renameTo
+//                (new File("E:\\___BACKUP\\backup.zip"))) {
+//            file.delete();
+//            System.out.println("File moved successfully");
+//            return true;
+//        } else {
+//            System.out.println("Failed to move the file");
+//            return false;
+//        }
+//    }
 }
 
 

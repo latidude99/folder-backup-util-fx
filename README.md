@@ -21,7 +21,7 @@ The content of the result  ZIP file may include the original FolderBackupToolFX_
     
 
 By default the ZIP file name is composed of: `folderName` + `_backup_` + `dateandtime` + `.zip` 
-(eg. `FolderBackupToolFX_backup_2019-07-01 10.51.zip`) unless configured otherwise in app.config.
+(eg. `FolderBackupUtilFX_backup_2019-07-01 10.51.zip`) unless configured otherwise in app.config.
 
 # Status
 
