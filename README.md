@@ -7,11 +7,6 @@
 
 A tool for compressing files and folders to ZIP format with a simple JavaFX GUI.  
   
-The idea is when you have a folder based project you working on frequiently and want 
-to have a quick backup at the end of a day you drop this app in said folder, configure exluded files once and run it.   
-
-
-
 # General Info
 
 FolderBackupUtilFX packs the content of the folder it is executed from
@@ -31,16 +26,25 @@ By default the ZIP file name is composed of: `folder name` + `_backup_` + `date 
 (eg. `FolderBackupUtilFX_backup_2019-07-01 10.51.zip`) unless configured otherwise in the `.config` file.
 
 
+### *side note*
+*Created it for myself - the idea being that when you have a folder based project you working frequiently on and want 
+to have a quick extra backup at the end of a day, you drop this app in said folder, configure exluded files once and run it.* 
+
+*May add automatic exclusion already created archives (earlier in the same root folder) and/or copying/moving created archives to another location (defined in `.config` file) if there is a need for it.* 
+
+
 
 # Status
 
 Working. Not finished.
 
+
 # Technologies
 - Java JDK 8
 - JavaFX 8
 - Maven 3.60
-- IntelliJ IDEA. 
+- IntelliJ IDEA
+- Scene Builder
 
 **Plugins and libraries**
 - Apache Shade Maven plugin  version 2.4.1
