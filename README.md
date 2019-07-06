@@ -1,11 +1,15 @@
 # Folder Backup Util FX
 
-[![](https://img.shields.io/badge/release-0.0-blue.svg)](https://github.com/latidude99/enquiries/tree/master/release)
+[![](https://img.shields.io/badge/release-1.0-blue.svg)](https://github.com/latidude99/enquiries/tree/master/release)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![GitHub issues](https://img.shields.io/badge/issues-open%200-greenred.svg)](https://GitHub.com/latidude99/enquiries/issues/)
 [![](https://img.shields.io/badge/%20$%20-buy%20me%20a%20coffe-yellow.svg)](https://www.buymeacoffee.com/zWn1I6bVf)
 
-A tool for compressing folders to ZIP format with a simple JavaFX GUI.
+A tool for compressing files and folders to ZIP format with a simple JavaFX GUI.  
+  
+The idea is when you have a folder based project you working on frequiently and want 
+to have a quick backup at the end of a day you drop this app in said folder, configure exluded files once and run it.   
+
 
 
 # General Info
@@ -26,8 +30,7 @@ The content of the result  ZIP file includes (unless excluded explicitly in `.co
 By default the ZIP file name is composed of: `folder name` + `_backup_` + `date and time` + `.zip` 
 (eg. `FolderBackupUtilFX_backup_2019-07-01 10.51.zip`) unless configured otherwise in the `.config` file.
 
-This is a small tool I created for myself. The idea is when you have a folder based project you working on frequiently and want 
-to have a quick backup at the end of a day you drop this app in said folder, configure exluded files once and run it. 
+
 
 # Status
 
