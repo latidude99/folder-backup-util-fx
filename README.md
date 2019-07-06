@@ -16,8 +16,8 @@ FolderBackupUtilFX packs the content of the folder it is executed from
 if exists is read at the application start). The `.config` file contains explanations 
 how to use it.
 
-When started the app will start compressing the all folders, subfolders and files in the root folder showing
-a progress bar in the main window. At any point the process of compressing can be stopped. When finished, cancelled or interrupted otherwise an option to delete the created ZIP archive will be shown as well as an option to close the app.
+When started the app will begin compressing the all folders, subfolders and files in the root folder showing
+a progress bar in the main window. At any point the process can be stopped. When finished, cancelled or interrupted otherwise an option to delete the created ZIP archive will be shown as well as an option to close the app.
   
   
 The content of the result  ZIP file includes (unless excluded explicitly in `.config`) the original `FolderBackupToolFX_vXX.jar` and `FolderBackupToolFX_vXX.config` files.   
@@ -26,9 +26,12 @@ The content of the result  ZIP file includes (unless excluded explicitly in `.co
 By default the ZIP file name is composed of: `folder name` + `_backup_` + `date and time` + `.zip` 
 (eg. `FolderBackupUtilFX_backup_2019-07-01 10.51.zip`) unless configured otherwise in the `.config` file.
 
+This is a small tool I created for myself. The idea is when you have a folder based project you working on frequiently and want 
+to have a quick backup at the end of a day you drop this app in said folder, configure exluded files once and run it. 
+
 # Status
 
-Working. Not finieshed.
+Working. Not finished.
 
 # Technologies
 - Java JDK 8
