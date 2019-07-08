@@ -1,6 +1,8 @@
 package com.latidude99;
 
 import javafx.concurrent.Task;
+import javafx.scene.control.Label;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +17,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZipTask extends Task <Void>{
+    public static final String APP_NAME = "FolderBackupUtilFX";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH.mm");
     LocalDateTime localDateTime;
     private List <String> fileList;
@@ -23,6 +26,8 @@ public class ZipTask extends Task <Void>{
     public String archiveNameGenerated;
     public String logNameGenerated;
     String sourceFolder;
+    private long bufferProgress;
+    private long fileSize;
 
     public ZipTask() throws IOException {
         fileList = new ArrayList <>();
@@ -35,8 +40,8 @@ public class ZipTask extends Task <Void>{
     @Override
     protected Void call() throws Exception {
         archiveNameGenerated = getBackupPathAndName(archiveNameDefined);
-        logNameGenerated = archiveNameGenerated.substring(0, archiveNameGenerated.length() -3) +
-                "log";
+        logNameGenerated =
+                archiveNameGenerated.substring(0, archiveNameGenerated.length() -3) + "log";
         ConfigReadUtil.logConfig(logNameGenerated, archiveNameGenerated);
 
         sourceFolder = getSourceFolder();
@@ -49,6 +54,7 @@ public class ZipTask extends Task <Void>{
 
 
     public void zipIt(String sourceFolder, String zipFile) {
+ //       fileList.forEach(fileName -> System.out.println(fileName));
         long numberOfFiles = fileList.size();
         long archived = 0;
 
@@ -68,6 +74,8 @@ public class ZipTask extends Task <Void>{
                     return;
                 }
                 Logger.log(logNameGenerated, "\r\nadding file : " + file);
+                File fileProcessed = new File(source + File.separator + file);
+                fileSize = fileProcessed.length();
                 ZipEntry zipEntry = new ZipEntry(source + File.separator + file);
                 zos.putNextEntry(zipEntry);
                 try {
@@ -75,19 +83,22 @@ public class ZipTask extends Task <Void>{
                     int len;
                     while ((len = in .read(buffer)) > 0) {
                         zos.write(buffer, 0, len);
+                        bufferProgress += buffer.length;
+                        this.updateMessage("adding:    " + file + "\r\ncompleted:    "
+                                + String.format("%,d", (bufferProgress) / 1024) + " KB");
                     }
                 } finally {
                     in.close();
                 }
+            bufferProgress = 0;
             archived += 1;
             this.updateProgress(archived, numberOfFiles);
-            this.updateMessage("added: " + file);
-            Logger.log(logNameGenerated, " ....OK");
+            Logger.log(logNameGenerated, ".....[OK]  ");
             }
 
             zos.closeEntry();
             Logger.log(logNameGenerated, "\r\n\r\n" +
-                    "Folder  " + sourceFolder + "  has been successfully compressed\r\n");
+                    "Folder  " + sourceFolder + "  has been successfully archived.\r\n");
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -101,7 +112,6 @@ public class ZipTask extends Task <Void>{
     }
 
     public void generateFileList(List<String> excluded, String sourceFolder, File node) {
-//      List<String> argsList = argsToList(args);
         int count= 0;
 
         // adds file only
@@ -111,6 +121,8 @@ public class ZipTask extends Task <Void>{
                 if (node.getName().equals(name))
                     count++;
             }
+            if(node.getName().contains(APP_NAME) && node.getName().contains(".exe"))
+                count++;
             if(count == 0)
                 fileList.add(generateZipEntry(sourceFolder, node.toString()));
         }
@@ -160,7 +172,7 @@ public class ZipTask extends Task <Void>{
         String folder = path.substring(path.lastIndexOf("\\"));
         localDateTime = LocalDateTime.now();
         String time = localDateTime.format(formatter);
-        if(customName != null && !customName.equals("")){
+        if(customName != null && !customName.equals("none")){
             pathAndName = path + File.separator + customName;
         }else{
             pathAndName = path +
@@ -174,22 +186,6 @@ public class ZipTask extends Task <Void>{
         return pathAndName;
     }
 
-
-
-//
-//    public boolean moveBackupFile(String backupFileName, File file){
-//        File backupFile = new File(backupFileName);
-//
-//        if(backupFile.renameTo
-//                (new File("E:\\___BACKUP\\backup.zip"))) {
-//            file.delete();
-//            System.out.println("File moved successfully");
-//            return true;
-//        } else {
-//            System.out.println("Failed to move the file");
-//            return false;
-//        }
-//    }
 }
 
 

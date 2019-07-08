@@ -14,7 +14,9 @@ public class ConfigReadUtil {
 
     public static final String CONFIG_PATH = "FolderBackupUtilFX.config";
     public static List<String> excluded;
-    public static String name = "";
+    public static String name = "none";
+    public static String pathToCopy = "none";
+    public static String pathToMove = "none";
 
 
 
@@ -39,6 +41,12 @@ public class ConfigReadUtil {
                                 break;
                             case "name":
                                 name = params[1].trim();
+                            case "path.to.copy":
+                                pathToCopy = params[1].trim();
+                                break;
+                            case "path.to.move":
+                                pathToMove = params[1].trim();
+                                break;
                         }
                     }
                 }
@@ -53,7 +61,7 @@ public class ConfigReadUtil {
     public static void logConfig(String logName, String defaultName){
         Logger.clearLog(logName);
 
-        if(name != null && !name.equals("")){
+        if(name != null && !name.equals("none")){
             Logger.info = Logger.info + "ZIP archive name: " + name +
                     "\r\n\r\n";
         } else{

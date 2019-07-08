@@ -5,6 +5,7 @@ IGNORE/
 
 target/
 
+!FolderBackupUtilFX-1.0.jar
 
 ##########################
 ## Java

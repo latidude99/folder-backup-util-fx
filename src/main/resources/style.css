@@ -1,1 +1,73 @@
 .progress-bar .bar {-fx-padding:2px; -fx-background-insets:0; -fx-progress-color: lavender; -fx-background-color: fuchsia;}
+
+/*.text-area { -text-area-background: black; } .text-area .content { -fx-background-color: -text-area-background ;
+ */-fx-border-color : black;}
+
+.text-area {
+    -fx-text-fill: white;
+    -fx-background-insets: 0;
+    -fx-background-color: transparent, black, transparent, black;
+    -text-area-background: black;
+}
+
+.text-area .content {
+    -fx-background-color: transparent, black, transparent, black;
+}
+
+.text-area:focused .content {
+    -fx-background-color: transparent, black, transparent, black;
+}
+
+.text-area:focused {
+    -fx-highlight-fill: black;
+}
+
+.text-area .content {
+    -fx-padding: 10px;
+    -fx-text-fill: white;
+    -fx-highlight-fill: black;
+    -fx-background-radius: 0 ;
+}
+
+.root { -fx-background-color: transparent; }
+
+.scroll-pane {
+    -fx-background-color: black;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: black;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: white;
+    -fx-background-radius: 5em;
+}
+
+
+
+
+
+
+
+
+
+
+
