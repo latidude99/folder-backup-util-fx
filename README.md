@@ -1,40 +1,55 @@
 # Folder Backup Util FX
 
-[![](https://img.shields.io/badge/release-0.0-blue.svg)](https://github.com/latidude99/enquiries/tree/master/release)
+[![](https://img.shields.io/badge/release-1.0-blue.svg)](https://github.com/latidude99/enquiries/tree/master/release)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![GitHub issues](https://img.shields.io/badge/issues-open%200-greenred.svg)](https://GitHub.com/latidude99/enquiries/issues/)
 [![](https://img.shields.io/badge/%20$%20-buy%20me%20a%20coffe-yellow.svg)](https://www.buymeacoffee.com/zWn1I6bVf)
 
-A command-line tool for compressing folders to ZIP format.
-
-
+A tool for compressing files and folders to ZIP format with a simple JavaFX GUI.  
+  
 # General Info
 
 FolderBackupUtilFX packs the content of the folder it is executed from
 (files, folders and subfolders) into a ZIP file. You can exclude
- files and folders listing them in the app.config file (which 
-if`exist is read at the application start). The app.config file contains explanations 
+ files and folders listing them in the  `.config` file (which 
+if exists is read at the application start). The `.config` file contains explanations 
 how to use it.
+
+When started the app will begin compressing the all folders, subfolders and files in the root folder showing
+a progress bar in the main window. At any point the process can be stopped. When finished, cancelled or interrupted otherwise an option to delete the created ZIP archive will be shown as well as an option to close the app.
   
   
-The content of the result  ZIP file may include the original FolderBackupToolFX_vXX.jar file (defined in app.config)   
+The content of the result  ZIP file includes (unless excluded explicitly in `.config`) the original `FolderBackupToolFX_vXX.jar` and `FolderBackupToolFX_vXX.config` files.   
     
 
-By default the ZIP file name is composed of: `folderName` + `_backup_` + `dateandtime` + `.zip` 
-(eg. `FolderBackupUtilFX_backup_2019-07-01 10.51.zip`) unless configured otherwise in app.config.
+By default the ZIP file name is composed of: `folder name` + `_backup_` + `date and time` + `.zip` 
+(eg. `FolderBackupUtilFX_backup_2019-07-01 10.51.zip`) unless configured otherwise in the `.config` file.
+
+
+### *side note*
+*Created it for myself - the idea being that when you have a folder based project you working frequiently on and want 
+to have a quick extra backup at the end of a day, you drop this app in said folder, configure exluded files once and run it.* 
+
+*May add automatic exclusion already created archives (earlier in the same root folder) and/or copying/moving created archives to another location (defined in `.config` file) if there is a need for it.* 
+
+
 
 # Status
 
-In progress, not fully working yet.
+Working. Not finished.
+
 
 # Technologies
-- Java JDK 12
-- JavaFX 12
+- Java JDK 8
+- JavaFX 8
 - Maven 3.60
-- IntelliJ IDEA. 
+- IntelliJ IDEA
+- Scene Builder
 
 **Plugins and libraries**
 - Apache Shade Maven plugin  version 2.4.1
+- Launch4j version 1.7.25
+- Apache CommonsIO version 2.6
 
 
 # License
