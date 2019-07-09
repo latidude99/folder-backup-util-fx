@@ -166,7 +166,7 @@ public class MainController {
             FileUtils.copyFile(archiveCreated, archiveCopied);
             infoArea.setStyle("-fx-text-fill: #66ff66; -fx-font: 12 verdana;");
             infoArea.setText("The archive file has been created and copied to: \r\n" +
-                             destinationPath);
+                             destinationPath + "\r\n<< Click here to see details >>");
             stopBtn.setText("Delete original archive");
         } catch (IOException e) {
             infoArea.setStyle("-fx-text-fill: #ff5c33; -fx-font: 12 verdana;");
@@ -187,7 +187,7 @@ public class MainController {
                 FileUtils.forceDelete(new File(zipTask.archiveNameGenerated));
                 infoArea.setStyle("-fx-text-fill: #66ff66; -fx-font: 12 verdana;");
                 infoArea.setText("The archive file has been created and moved to: \r\n" +
-                destinationPath);
+                destinationPath + "\r\n<< Click here to see details >>");
                 stopBtn.setDisable(true);
             }else{
                 infoArea.setStyle("-fx-text-fill: #ff5c33; -fx-font: 12 verdana;");
